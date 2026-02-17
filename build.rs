@@ -17,6 +17,9 @@ macro_rules! pathbufstr {
 }
 
 fn main() {
+  // to skip build
+  if std::env::var("DOCS_RS").is_ok() { return; }
+
   let s_path: String = if cfg!(docsrs) {
     std::env::var("OUT_DIR").unwrap()
   }else{

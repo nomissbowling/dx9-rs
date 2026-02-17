@@ -1,6 +1,6 @@
 [package]
 name = "dx9"
-version = "0.1.0" # change with html_root_url in lib.rs
+version = "0.1.1" # change with html_root_url in lib.rs
 edition = "2024"
 authors = ["nomissbowling <nomissbowling@yahoo.co.jp>"]
 
@@ -63,4 +63,6 @@ cc = "=1.2.53" # "1.0.79"
 bindgen = "=0.72.1" # "0.65.1"
 
 [package.metadata.docs.rs]
+# https://docs.rs/about/metadata
+targets = ["x86_64-pc-windows-msvc"]
 rustc-args = ["--cfg", "docsrs"]

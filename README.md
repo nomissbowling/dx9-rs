@@ -6,7 +6,7 @@ Rust library for DirectX 9.0c
 Links
 -----
 
-- [https://crate.io/crates/dx9](https://crate.io/crates/dx9)
+- [https://crates.io/crates/dx9](https://crates.io/crates/dx9)
 - [https://github.com/nomissbowling/dx9-rs](https://github.com/nomissbowling/dx9-rs)
 
 
