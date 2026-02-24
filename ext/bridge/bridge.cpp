@@ -624,14 +624,19 @@ HRESULT setLight(Cxd *xd)
   return S_OK;
 }
 
-HRESULT setCamera(Cxd *xd)
+HRESULT setCamera(Cxd *xd, size_t i)
 {
 #ifdef _DEBUG
   if(!xd) return E_FAIL;
   if(!xd->dev) return E_FAIL;
 #endif
   D3DXVECTOR3 axisZ = D3DXVECTOR3(0.0f, 0.0f, 1.0f);
-  xd->lc.ep = D3DXVECTOR3(0.0f, 3.0f, -2.5f); // (0.0f, 2.5f, 3.0f);
+  D3DXVECTOR3 eps[] = {
+    D3DXVECTOR3(0.0f, 3.0f, -2.5f), // (0.0f, 2.5f, 3.0f);
+    D3DXVECTOR3(0.0f, 0.0f, -2.5f),
+    D3DXVECTOR3(0.0f, -3.0f, -2.5f),
+    D3DXVECTOR3(3.0f, 0.0f, -2.5f)};
+  xd->lc.ep = eps[i];
   xd->lc.la = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
   xd->lc.top = D3DXVECTOR3(0.0f, 1.0f, 0.0f); // (0.0f, 0.0f, 1.0f);
   D3DXMATRIX rot, cam;
@@ -647,7 +652,7 @@ HRESULT setCamera(Cxd *xd)
   return S_OK;
 }
 
-HRESULT drawD3D(Cxd *xd)
+HRESULT drawD3D(Cxd *xd, size_t i)
 {
 #ifdef _DEBUG
   if(!xd) return E_FAIL;
@@ -670,7 +675,7 @@ HRESULT drawD3D(Cxd *xd)
     D3DCOLOR_ARGB(255, hex, hex, hex), 1.0f, 0);
   if(SUCCEEDED(xd->dev->BeginScene())){
     setLight(xd);
-    setCamera(xd);
+    setCamera(xd, i);
 
     D3DXVECTOR3 axisZ = D3DXVECTOR3(0.0f, 0.0f, 1.0f);
     D3DXMATRIX trans, scale, rot;

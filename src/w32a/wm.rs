@@ -146,7 +146,7 @@ unsafe {
   // UpdateWindow(wnd)?;
 
   let mut tss = (0..4).into_iter().map(|i| {
-    let winname = PCWSTR(l(format!("{}_{:04}", "kari", i).as_str()).as_ptr());
+    let winname = fmt_w_w!("{}_{}", appname, fmt_w!("{:04}", i));
     let Ok(wnd) = CreateWindowExW(
       WINDOW_EX_STYLE::default(), clsname, winname, ws,
       512 - 40 + w * (i % 2), (h - 60) * (i / 2), w, h,
@@ -189,8 +189,8 @@ unsafe {
         let _ = TranslateMessage(&msg);
         DispatchMessageW(&msg);
       }else{
-        tss.iter_mut().for_each(|t| {
-          let _ = dx.draw_d3d();
+        tss.iter_mut().enumerate().for_each(|(i, t)| {
+          let _ = dx.draw_d3d(i);
           let _ = trans_d3d(t.wnd, wnd);
         });
         let _ = dx.update_d3d();

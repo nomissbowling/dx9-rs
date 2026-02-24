@@ -293,16 +293,16 @@ unsafe {
   }
 
   /// set_camera
-  pub fn set_camera(&mut self) -> HRESULT {
+  pub fn set_camera(&mut self, i: usize) -> HRESULT {
 unsafe {
-    HRESULT(setCamera(self.xd))
+    HRESULT(setCamera(self.xd, i))
 }
   }
 
   /// draw_d3d
-  pub fn draw_d3d(&mut self) -> HRESULT {
+  pub fn draw_d3d(&mut self, i: usize) -> HRESULT {
 unsafe {
-    HRESULT(drawD3D(self.xd))
+    HRESULT(drawD3D(self.xd, i))
 }
   }
 

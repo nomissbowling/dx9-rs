@@ -12,6 +12,46 @@ use windows::{
   Win32::{Foundation::*, Security::*, System::Threading::*}
 };
 
+/// format to PCSTR ($f: fmt, $a: any)
+#[macro_export]
+macro_rules! fmt_s {
+  ($f:literal, $a:expr) => {{
+    PCSTR(a(format!($f, $a).as_str()).as_ptr())
+  }};
+}
+pub use fmt_s;
+
+/// format to PCSTR ($f: fmt, $a: PCSTR, $b: PCSTR)
+#[macro_export]
+macro_rules! fmt_s_s {
+  ($f:literal, $a:expr, $b:expr) => {{
+    let s = $a.to_string().expect("PCSTR");
+    let t = $b.to_string().expect("PCSTR");
+    PCSTR(a(format!($f, s.as_str(), t.as_str()).as_str()).as_ptr())
+  }};
+}
+pub use fmt_s_s;
+
+/// format to PCWSTR ($f: fmt, $a: any)
+#[macro_export]
+macro_rules! fmt_w {
+  ($f:literal, $a:expr) => {{
+    PCWSTR(l(format!($f, $a).as_str()).as_ptr())
+  }};
+}
+pub use fmt_w;
+
+/// format to PCWSTR ($f: fmt, $a: PCWSTR, $b: PCWSTR)
+#[macro_export]
+macro_rules! fmt_w_w {
+  ($f:literal, $a:expr, $b:expr) => {{
+    let s = $a.to_string().expect("PCWSTR");
+    let t = $b.to_string().expect("PCWSTR");
+    PCWSTR(l(format!($f, s.as_str(), t.as_str()).as_str()).as_ptr())
+  }};
+}
+pub use fmt_w_w;
+
 /// asciiz literal same as s!
 #[inline]
 pub fn a(s: &str) -> Vec<u8> {

@@ -388,10 +388,10 @@ unsafe extern "C" {
     pub fn setLight(xd: *mut Cxd) -> HRESULT;
 }
 unsafe extern "C" {
-    pub fn setCamera(xd: *mut Cxd) -> HRESULT;
+    pub fn setCamera(xd: *mut Cxd, i: usize) -> HRESULT;
 }
 unsafe extern "C" {
-    pub fn drawD3D(xd: *mut Cxd) -> HRESULT;
+    pub fn drawD3D(xd: *mut Cxd, i: usize) -> HRESULT;
 }
 unsafe extern "C" {
     pub fn updateD3D(xd: *mut Cxd) -> HRESULT;

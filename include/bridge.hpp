@@ -193,8 +193,8 @@ HRESULT drawChars(Cxd *xd, DWORD *c, DWORD *s,
   const wchar_t *w, UINT l); // texture cell w/h scale w/h
 HRESULT draw2DText(Cxd *xd, DWORD c, UINT f, int x, int y, const wchar_t *t);
 HRESULT setLight(Cxd *xd);
-HRESULT setCamera(Cxd *xd);
-HRESULT drawD3D(Cxd *xd);
+HRESULT setCamera(Cxd *xd, size_t i);
+HRESULT drawD3D(Cxd *xd, size_t i);
 HRESULT updateD3D(Cxd *xd);
 HRESULT rotCG(D3DXMATRIX *rot,
   const D3DXVECTOR3 *axis, float a, const D3DXVECTOR3 *cg);
