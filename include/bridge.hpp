@@ -51,6 +51,9 @@ extern const char *Cpname[] = {"world", "view", "prj", "ext"}; // 4x4 4x4 4x4 4
 struct Cxd_; // forward ref (unknown size 0)
 typedef struct Cxd_ Cxd;
 
+struct TransScreen_; // forward ref (unknown size 0)
+typedef struct TransScreen_ TransScreen;
+
 // bindgen BUG ? (sometimes be f: *mut usize) place dummy to set Csa::a: *const
 struct Fuga {
   const size_t *f;
@@ -156,6 +159,20 @@ typedef struct Cxd_ {
   Cfps fps;
 } Cxd;
 
+typedef struct TransScreen_ {
+  float ep[4];
+  float la[4];
+  float top[4];
+  wchar_t *p; // pointer to buf
+  LONG x, y;
+  LONG w, h;
+  HWND owner;
+  HWND wnd;
+  HDC mdc;
+  HBITMAP bmp;
+  wchar_t buf[256]; // dummy ***do NOT access*** (set Vec<u16> by Rust)
+} TransScreen;
+
 #include <ex_rust.h>
 
 #endif // BRIDGE_FAKE_DISABLE
@@ -193,8 +210,8 @@ HRESULT drawChars(Cxd *xd, DWORD *c, DWORD *s,
   const wchar_t *w, UINT l); // texture cell w/h scale w/h
 HRESULT draw2DText(Cxd *xd, DWORD c, UINT f, int x, int y, const wchar_t *t);
 HRESULT setLight(Cxd *xd);
-HRESULT setCamera(Cxd *xd, size_t i);
-HRESULT drawD3D(Cxd *xd, size_t i);
+HRESULT setCamera(Cxd *xd, TransScreen *ptss);
+HRESULT drawD3D(Cxd *xd, TransScreen *ptss);
 HRESULT updateD3D(Cxd *xd);
 HRESULT rotCG(D3DXMATRIX *rot,
   const D3DXVECTOR3 *axis, float a, const D3DXVECTOR3 *cg);

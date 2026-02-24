@@ -30,9 +30,11 @@ pub use wm::*;
 pub use unwind::*;
 
 use crate::core::*;
-use std::{result::Result, error::Error}; // ptr::null_mut
+use std::{result::Result, error::Error, ptr::null_mut};
 use windows::{
-  core::*
+  core::*,
+  Win32::Graphics::Gdi::*,
+  Win32::{Foundation::*}
 };
 
 /// test_app
@@ -47,8 +49,29 @@ unsafe {
 }
   out_log(stat, "begin window\n");
 */
-  let result = create_window(Dx9::new(sz, sa).expect("Dx9"),
-    wndproc, w!("Dx9 Class"), w!("Dx9 Test App"), w!(""))?;
+  let appname = "Dx9 Test App";
+  let (w, h) = (sz[0], sz[1]);
+  let eps = [
+    [0.0f32, 3.0f32, -2.5f32, 0.0f32], // [0.0, 2.5, 3.0, 0.0]
+    [0.0f32, 0.0f32, -2.5f32, 0.0f32],
+    [0.0f32, -3.0f32, -2.5f32, 0.0f32],
+    [3.0f32, 0.0f32, -2.5f32, 0.0f32]];
+  let tss = eps.into_iter().enumerate().map(|(u, ep)| {
+    let i = u as i32;
+    let la = [0.0f32, 0.0f32, 0.0f32, 0.0f32];
+    let top = [0.0f32, 1.0f32, 0.0f32, 0.0f32]; // [0.0, 0.0, 1.0, 0.0]
+    let (x, y) = (512 - 40 + w * (i % 2), (h - 60) * (i / 2));
+    let owner = HWND(null_mut());
+    let wnd = HWND(null_mut());
+    let mdc = HDC(null_mut());
+    let bmp = HBITMAP(null_mut());
+//    let winname = fmt_w_w!("{}_{}", appname, fmt_w!("{:04}", i));
+    let buf = l(format!("{}_{:04}", appname, i).as_str());
+    let p = PCWSTR(buf.as_ptr());
+    TransScreen{ep, la, top, p, x, y, w, h, owner, wnd, mdc, bmp, buf}
+  }).collect::<Vec<_>>();
+  let result = create_window(Dx9::new(sz, sa).expect("Dx9"), tss,
+    wndproc, w!("Dx9 Class"), PCWSTR(l(appname).as_ptr()), w!(""))?;
 /*
   out_log(stat, "end window\n");
 unsafe {

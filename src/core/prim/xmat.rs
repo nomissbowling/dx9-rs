@@ -8,7 +8,7 @@ use windows::{
   core::*
 };
 
-/// prec_eq_c_array macro ($a: XMat44F32, $b: float \[\]\[4\], $p: f32)
+/// prec_eq_c_array macro ($a: XMat44F32, $b: float [][4], $p: f32)
 #[macro_export]
 macro_rules! prec_eq_c_array {
   ($a:expr, $b:expr, $p:expr) => {{
@@ -18,7 +18,7 @@ macro_rules! prec_eq_c_array {
 }
 pub use prec_eq_c_array;
 
-/// prec_eq_c_array_transposed macro ($a: XMat44F32, $b: float \[\]\[4\], $p: f32)
+/// prec_eq_c_array_transposed macro ($a: XMat44F32, $b: float [][4], $p: f32)
 #[macro_export]
 macro_rules! prec_eq_c_array_transposed {
   ($a:expr, $b:expr, $p:expr) => {

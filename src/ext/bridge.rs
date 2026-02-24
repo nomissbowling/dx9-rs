@@ -3,7 +3,7 @@
 mod cppbridge;
 pub use cppbridge::{
   Cpname, D3DXVECTOR3, D3DXMATRIX, D3DXQUATERNION, D3DPRIMITIVETYPE,
-  Cvtx, FVF_CVTX, D3DVERTEXELEMENT9, CvtxElem, Cxd,
+  Cvtx, FVF_CVTX, D3DVERTEXELEMENT9, CvtxElem, Cxd, TransScreen as Cts,
   createD3D, destroyD3D, finishD3D, initD3D,
   Csa, manage_resource_n_pvec, manage_resource_ptr_mut,
   manage_resource_set_disposer,

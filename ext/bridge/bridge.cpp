@@ -624,21 +624,17 @@ HRESULT setLight(Cxd *xd)
   return S_OK;
 }
 
-HRESULT setCamera(Cxd *xd, size_t i)
+HRESULT setCamera(Cxd *xd, TransScreen *ptss)
 {
 #ifdef _DEBUG
   if(!xd) return E_FAIL;
   if(!xd->dev) return E_FAIL;
+  if(!ptss) return E_FAIL;
 #endif
   D3DXVECTOR3 axisZ = D3DXVECTOR3(0.0f, 0.0f, 1.0f);
-  D3DXVECTOR3 eps[] = {
-    D3DXVECTOR3(0.0f, 3.0f, -2.5f), // (0.0f, 2.5f, 3.0f);
-    D3DXVECTOR3(0.0f, 0.0f, -2.5f),
-    D3DXVECTOR3(0.0f, -3.0f, -2.5f),
-    D3DXVECTOR3(3.0f, 0.0f, -2.5f)};
-  xd->lc.ep = eps[i];
-  xd->lc.la = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
-  xd->lc.top = D3DXVECTOR3(0.0f, 1.0f, 0.0f); // (0.0f, 0.0f, 1.0f);
+  xd->lc.ep = D3DXVECTOR3(ptss->ep[0], ptss->ep[1], ptss->ep[2]);
+  xd->lc.la = D3DXVECTOR3(ptss->la[0], ptss->la[1], ptss->la[2]);
+  xd->lc.top = D3DXVECTOR3(ptss->top[0], ptss->top[1], ptss->top[2]);
   D3DXMATRIX rot, cam;
   D3DXMatrixRotationAxis(&rot, &axisZ, D3DXToRadian(xd->lc.angle));
   D3DXMatrixLookAtLH(&cam, &xd->lc.ep, &xd->lc.la, &xd->lc.top);
@@ -652,11 +648,12 @@ HRESULT setCamera(Cxd *xd, size_t i)
   return S_OK;
 }
 
-HRESULT drawD3D(Cxd *xd, size_t i)
+HRESULT drawD3D(Cxd *xd, TransScreen *ptss)
 {
 #ifdef _DEBUG
   if(!xd) return E_FAIL;
   if(!xd->dev) return E_FAIL;
+  if(!ptss) return E_FAIL;
 #endif
   RECT rct;
   GetClientRect(xd->wnd, &rct);
@@ -675,7 +672,7 @@ HRESULT drawD3D(Cxd *xd, size_t i)
     D3DCOLOR_ARGB(255, hex, hex, hex), 1.0f, 0);
   if(SUCCEEDED(xd->dev->BeginScene())){
     setLight(xd);
-    setCamera(xd, i);
+    setCamera(xd, ptss);
 
     D3DXVECTOR3 axisZ = D3DXVECTOR3(0.0f, 0.0f, 1.0f);
     D3DXMATRIX trans, scale, rot;

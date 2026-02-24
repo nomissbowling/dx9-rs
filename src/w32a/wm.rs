@@ -18,16 +18,32 @@ use windows::{
 /// TransScreen
 #[repr(C)]
 pub struct TransScreen {
+  /// float ep[4]
+  pub ep: [f32; 4],
+  /// float la[4]
+  pub la: [f32; 4],
+  /// float top[4]
+  pub top: [f32; 4],
+  /// pointer to buf
+  pub p: PCWSTR,
+  /// LONG x
+  pub x: i32,
+  /// LONG y
+  pub y: i32,
   /// LONG w
   pub w: i32,
   /// LONG h
   pub h: i32,
+  /// HWND owner
+  pub owner: HWND,
   /// HWND wnd
   pub wnd: HWND,
   /// HDC mdc
   pub mdc: HDC,
   /// HBITMAP bmp
-  pub bmp: HBITMAP
+  pub bmp: HBITMAP,
+  /// temp
+  pub buf: Vec<u16>
 }
 
 /// trans_d3d
@@ -108,7 +124,7 @@ catch_panic!(UNWIND, unsafe {
 }
 
 /// create_window
-pub fn create_window(mut dx: Dx9,
+pub fn create_window(mut dx: Dx9, mut tss: Vec<TransScreen>,
   wproc: extern "system" fn (HWND, u32, WPARAM, LPARAM) -> LRESULT,
   clsname: PCWSTR, appname: PCWSTR, menuname: PCWSTR) ->
   Result<i32, Box<dyn Error>> {
@@ -145,25 +161,22 @@ unsafe {
   assert!(r == false); // create window (false: without true: with) WS_VISIBLE
   // UpdateWindow(wnd)?;
 
-  let mut tss = (0..4).into_iter().map(|i| {
-    let winname = fmt_w_w!("{}_{}", appname, fmt_w!("{:04}", i));
+  tss.iter_mut().for_each(|t| {
+    t.owner = wnd; // before let Ok(wnd)
+    let dc = GetDC(Some(wnd));
+    t.mdc = CreateCompatibleDC(Some(dc));
+    t.bmp = CreateCompatibleBitmap(dc, w, h);
+    let _ = SelectObject(t.mdc, t.bmp.into());
     let Ok(wnd) = CreateWindowExW(
-      WINDOW_EX_STYLE::default(), clsname, winname, ws,
-      512 - 40 + w * (i % 2), (h - 60) * (i / 2), w, h,
-      Some(wnd), None, Some(inst.into()), None) else { panic!("sub create"); };
+      WINDOW_EX_STYLE::default(), clsname, t.p, ws,
+      t.x, t.y, t.w, t.h, Some(wnd), None, Some(inst.into()), None)
+      else { panic!("sub create"); };
     resume_panic!(UNWIND);
     assert_ne!(wnd, HWND(null_mut()));
     let r = ShowWindow(wnd, SW_SHOW);
     assert!(r == false); // create window without/with WS_VISIBLE
     // UpdateWindow(wnd)?;
-    let dc = GetDC(Some(wnd));
-    let mdc = CreateCompatibleDC(Some(dc));
-    let bmp = CreateCompatibleBitmap(dc, w, h);
-    let _ = SelectObject(mdc, bmp.into());
-    TransScreen{w, h, wnd, mdc, bmp}
-  }).collect::<Vec<_>>();
-  // separate iteration to set fixed address of tss elements
-  tss.iter_mut().for_each(|t| {
+    t.wnd = wnd;
     SetWindowLongPtrW(t.wnd, GWLP_USERDATA, t as *mut TransScreen as isize);
   });
 
@@ -189,8 +202,9 @@ unsafe {
         let _ = TranslateMessage(&msg);
         DispatchMessageW(&msg);
       }else{
-        tss.iter_mut().enumerate().for_each(|(i, t)| {
-          let _ = dx.draw_d3d(i);
+        tss.iter_mut().for_each(|t| {
+          if t.wnd == HWND(null_mut()) { return; }
+          let _ = dx.draw_d3d(t);
           let _ = trans_d3d(t.wnd, wnd);
         });
         let _ = dx.update_d3d();

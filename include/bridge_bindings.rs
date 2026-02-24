@@ -58,6 +58,12 @@ pub struct Cxd_ {
 pub type Cxd = Cxd_;
 #[repr(C)]
 #[derive(Debug, Copy, Clone)]
+pub struct TransScreen_ {
+    _unused: [u8; 0],
+}
+pub type TransScreen = TransScreen_;
+#[repr(C)]
+#[derive(Debug, Copy, Clone)]
 pub struct Fuga {
     pub f: *mut usize,
 }
@@ -388,10 +394,10 @@ unsafe extern "C" {
     pub fn setLight(xd: *mut Cxd) -> HRESULT;
 }
 unsafe extern "C" {
-    pub fn setCamera(xd: *mut Cxd, i: usize) -> HRESULT;
+    pub fn setCamera(xd: *mut Cxd, ptss: *mut TransScreen) -> HRESULT;
 }
 unsafe extern "C" {
-    pub fn drawD3D(xd: *mut Cxd, i: usize) -> HRESULT;
+    pub fn drawD3D(xd: *mut Cxd, ptss: *mut TransScreen) -> HRESULT;
 }
 unsafe extern "C" {
     pub fn updateD3D(xd: *mut Cxd) -> HRESULT;

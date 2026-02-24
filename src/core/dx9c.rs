@@ -241,7 +241,7 @@ unsafe {
 }
   }
 
-  /// prep_rect_fan Cvtx\[4\]
+  /// prep_rect_fan Cvtx[4]
   pub fn prep_rect_fan(&mut self, vtx: *mut Cvtx, c: *mut u32, s: *mut u32,
     u: f32, v: f32, w: f32, h: f32,
     x: f32, y: f32, z: f32, a: f32, b: f32, cg: *mut D3DXVECTOR3) -> HRESULT {
@@ -250,7 +250,7 @@ unsafe {
 }
   }
 
-  /// prep_rect_strip Cvtx\[4\]
+  /// prep_rect_strip Cvtx[4]
   pub fn prep_rect_strip(&mut self, vtx: *mut Cvtx, c: *mut u32, s: *mut u32,
     u: f32, v: f32, w: f32, h: f32,
     x: f32, y: f32, z: f32, a: f32, b: f32, cg: *mut D3DXVECTOR3) -> HRESULT {
@@ -293,16 +293,16 @@ unsafe {
   }
 
   /// set_camera
-  pub fn set_camera(&mut self, i: usize) -> HRESULT {
+  pub fn set_camera(&mut self, tss: &mut TransScreen) -> HRESULT {
 unsafe {
-    HRESULT(setCamera(self.xd, i))
+    HRESULT(setCamera(self.xd, tss as *mut TransScreen as *mut Cts))
 }
   }
 
   /// draw_d3d
-  pub fn draw_d3d(&mut self, i: usize) -> HRESULT {
+  pub fn draw_d3d(&mut self, tss: &mut TransScreen) -> HRESULT {
 unsafe {
-    HRESULT(drawD3D(self.xd, i))
+    HRESULT(drawD3D(self.xd, tss as *mut TransScreen as *mut Cts))
 }
   }
 
