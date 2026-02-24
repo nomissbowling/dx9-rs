@@ -1,4 +1,4 @@
-#![doc(html_root_url = "https://docs.rs/dx9/0.1.1")]
+#![doc(html_root_url = "https://docs.rs/dx9/0.1.2")]
 //! Rust library for DirectX 9.0c
 //!
 //! # Requirements
@@ -37,7 +37,7 @@ mod tests {
   /// create_window
   #[test]
   fn test_w32a() {
-    let sa: Vec<usize> = vec![0, 32, 0, 0, 0, 0, 32, 0];
+    let sa: Vec<usize> = vec![4, 32, 4, 4, 4, 4, 32, 4];
     assert!(test_app([32 * 32, 32 * 24], &sa).expect("app Result") == 0);
   }
 
