@@ -1,4 +1,4 @@
-#![doc(html_root_url = "https://docs.rs/dx9/0.1.4")]
+#![doc(html_root_url = "https://docs.rs/dx9/0.1.5")]
 //! Rust library for DirectX 9.0c
 //!
 //! # Requirements

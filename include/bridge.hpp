@@ -163,14 +163,14 @@ typedef struct TransScreen_ {
   float ep[4];
   float la[4];
   float top[4];
-  wchar_t *p; // pointer to buf
+  wchar_t *winname; // pointer to Vec element &amp;buf[0]
   LONG x, y;
   LONG w, h;
   HWND owner;
   HWND wnd;
   HDC mdc;
   HBITMAP bmp;
-  wchar_t buf[256]; // dummy ***do NOT access*** (set Vec<u16> by Rust)
+  wchar_t buf[256]; // ignore size ***do NOT access*** replaced by Rust u16 Vec
 } TransScreen;
 
 #include <ex_rust.h>

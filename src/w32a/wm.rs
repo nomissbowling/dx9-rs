@@ -25,7 +25,7 @@ pub struct TransScreen {
   /// float top[4]
   pub top: [f32; 4],
   /// pointer to buf
-  pub p: PCWSTR,
+  pub winname: PCWSTR,
   /// LONG x
   pub x: i32,
   /// LONG y
@@ -168,7 +168,7 @@ unsafe {
     t.bmp = CreateCompatibleBitmap(dc, w, h);
     let _ = SelectObject(t.mdc, t.bmp.into());
     let Ok(wnd) = CreateWindowExW(
-      WINDOW_EX_STYLE::default(), clsname, t.p, ws,
+      WINDOW_EX_STYLE::default(), clsname, t.winname, ws,
       t.x, t.y, t.w, t.h, Some(wnd), None, Some(inst.into()), None)
       else { panic!("sub create"); };
     resume_panic!(UNWIND);

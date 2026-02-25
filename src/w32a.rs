@@ -67,8 +67,8 @@ unsafe {
     let bmp = HBITMAP(null_mut());
 //    let winname = fmt_w_w!("{}_{}", appname, fmt_w!("{:04}", i));
     let buf = l(format!("{}_{:04}", appname, i).as_str());
-    let p = PCWSTR(buf.as_ptr());
-    TransScreen{ep, la, top, p, x, y, w, h, owner, wnd, mdc, bmp, buf}
+    let winname = PCWSTR(buf.as_ptr());
+    TransScreen{ep, la, top, winname, x, y, w, h, owner, wnd, mdc, bmp, buf}
   }).collect::<Vec<_>>();
   let result = create_window(Dx9::new(sz, sa).expect("Dx9"), tss,
     wndproc, w!("Dx9 Class"), PCWSTR(l(appname).as_ptr()), w!(""))?;
