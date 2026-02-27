@@ -18,10 +18,12 @@ macro_rules! pathbufstr {
 
 fn main() {
   // to skip build
-  if std::env::var("DOCS_RS").is_ok() { return; }
-
+  // if std::env::var("DOCS_RS").is_ok() { return; }
   let s_path: String = if cfg!(docsrs) {
-    std::env::var("OUT_DIR").unwrap()
+    // || cfg!(cfg_docs) emmits unexpected_cfgs (rustdoc-args)
+    // || cfg!(feature) or || cfg!(test) etc
+    // default #[warn(unexpected_cfgs)]
+    std::env::var("OUT_DIR").expect("get env OUT_DIR")
   }else{
     ".".to_string()
   }; // to keep lifetime
@@ -38,8 +40,8 @@ fn main() {
   // let c_inl = if o_path == "." { "-Ob0" }else{ "-fno-default-inline" };
   // let c_asm = if o_path == "." { "-Fa" }else{ "-S" };
 
-  let mut dxsdk_include = ".".to_string();
-  let mut dxsdk_lib = ".".to_string();
+  let mut dxsdk_include = o_path.to_string(); // ".".to_string();
+  let mut dxsdk_lib = o_path.to_string(); // ".".to_string();
   if o_path == "." {
     let dxsdk_dir = PathBuf::from(std::env::var("DXSDK_DIR").expect("dxskd"));
     dxsdk_include = pathbufstr!(dxsdk_dir.join("Include"), "Include");

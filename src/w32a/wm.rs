@@ -124,7 +124,7 @@ catch_panic!(UNWIND, unsafe {
 }
 
 /// create_window
-pub fn create_window(mut dx: Dx9, mut tss: Vec<TransScreen>,
+pub fn create_window(mut dx: Dx9, mut tss: Vec<TransScreen>, mut spc: Space,
   wproc: extern "system" fn (HWND, u32, WPARAM, LPARAM) -> LRESULT,
   clsname: PCWSTR, appname: PCWSTR, menuname: PCWSTR) ->
   Result<i32, Box<dyn Error>> {
@@ -204,10 +204,10 @@ unsafe {
       }else{
         tss.iter_mut().for_each(|t| {
           if t.wnd == HWND(null_mut()) { return; }
-          let _ = dx.draw_d3d(t);
+          let _ = spc.render(&mut dx, t);
           let _ = trans_d3d(t.wnd, wnd);
         });
-        let _ = dx.update_d3d();
+        let _ = spc.step(&mut dx);
       }
       resume_panic!(UNWIND);
     }

@@ -38,7 +38,7 @@ use windows::{
 };
 
 /// test_app
-pub fn test_app(sz: [i32; 2], sa: &[usize]) -> Result<i32, Box<dyn Error>> {
+pub fn test_app() -> Result<i32, Box<dyn Error>> {
 unsafe {
   initLog(LOGFILE);
 }
@@ -50,6 +50,7 @@ unsafe {
   out_log(stat, "begin window\n");
 */
   let appname = "Dx9 Test App";
+  let sz: [i32; 2] = [32 * 32, 32 * 24];
   let (w, h) = (sz[0], sz[1]);
   let eps = [
     [0.0f32, 3.0f32, -2.5f32, 0.0f32], // [0.0, 2.5, 3.0, 0.0]
@@ -70,7 +71,19 @@ unsafe {
     let winname = PCWSTR(buf.as_ptr());
     TransScreen{ep, la, top, winname, x, y, w, h, owner, wnd, mdc, bmp, buf}
   }).collect::<Vec<_>>();
-  let result = create_window(Dx9::new(sz, sa).expect("Dx9"), tss,
+  let fncs = Fncs{
+    render: |_spc, dx, t| {
+      let _ = dx.draw_d3d(t);
+      Ok(())
+    },
+    step: |_spc, dx| {
+      let _ = dx.update_d3d();
+      Ok(())
+    }
+  };
+  let spc = Space{fncs};
+  let sa: Vec<usize> = vec![4, 32, 4, 4, 4, 4, 32, 4];
+  let result = create_window(Dx9::new(sz, &sa).expect("Dx9"), tss, spc,
     wndproc, w!("Dx9 Class"), PCWSTR(l(appname).as_ptr()), w!(""))?;
 /*
   out_log(stat, "end window\n");

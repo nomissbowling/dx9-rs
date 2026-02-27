@@ -1,9 +1,11 @@
 //! core.rs
 
 pub mod dx9c;
+pub mod space;
 pub mod prim;
 
 pub use dx9c::*;
+pub use space::*;
 pub use prim::{*, xmat::*};
 pub use crate::ext::{*, bridge::*, ts::*, pvec::*};
 use std::{mem};
