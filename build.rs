@@ -19,6 +19,7 @@ macro_rules! pathbufstr {
 fn main() {
   // to skip build
   // if std::env::var("DOCS_RS").is_ok() { return; }
+  // if let Ok(docs_rs) = std::env::var("DOCS_RS") { return; } else { return; }
   let s_path: String = if cfg!(docsrs) {
     // || cfg!(cfg_docs) emmits unexpected_cfgs (rustdoc-args)
     // || cfg!(feature) or || cfg!(test) etc

@@ -71,17 +71,7 @@ unsafe {
     let winname = PCWSTR(buf.as_ptr());
     TransScreen{ep, la, top, winname, x, y, w, h, owner, wnd, mdc, bmp, buf}
   }).collect::<Vec<_>>();
-  let fncs = Fncs{
-    render: |_spc, dx, t| {
-      let _ = dx.draw_d3d(t);
-      Ok(())
-    },
-    step: |_spc, dx| {
-      let _ = dx.update_d3d();
-      Ok(())
-    }
-  };
-  let spc = Space{fncs};
+  let spc = Space{obj: vec![]};
   let sa: Vec<usize> = vec![4, 32, 4, 4, 4, 4, 32, 4];
   let result = create_window(Dx9::new(sz, &sa).expect("Dx9"), tss, spc,
     wndproc, w!("Dx9 Class"), PCWSTR(l(appname).as_ptr()), w!(""))?;

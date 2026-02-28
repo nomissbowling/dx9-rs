@@ -124,10 +124,10 @@ catch_panic!(UNWIND, unsafe {
 }
 
 /// create_window
-pub fn create_window(mut dx: Dx9, mut tss: Vec<TransScreen>, mut spc: Space,
+pub fn create_window<T>(mut dx: Dx9, mut tss: Vec<TransScreen>, mut spc: T,
   wproc: extern "system" fn (HWND, u32, WPARAM, LPARAM) -> LRESULT,
   clsname: PCWSTR, appname: PCWSTR, menuname: PCWSTR) ->
-  Result<i32, Box<dyn Error>> {
+  Result<i32, Box<dyn Error>> where T: TSpace {
 unsafe {
   let sz = dx.size();
   let inst = GetModuleHandleA(None)?;
@@ -188,6 +188,7 @@ unsafe {
   }
   if result != 0 {
     timeBeginPeriod(1);
+    let _ = spc.setup(&mut dx);
     let mut msg = MSG::default();
 /*
     while GetMessageW(&mut msg, None, 0, 0).into() {
@@ -212,6 +213,7 @@ unsafe {
       resume_panic!(UNWIND);
     }
     result = cast_any!(i32, WPARAM, msg.wParam);
+    let _ = spc.dispose(&mut dx);
     timeEndPeriod(1);
   }
   dx.finish_d3d();
