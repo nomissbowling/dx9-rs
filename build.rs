@@ -24,7 +24,7 @@ fn main() {
     // || cfg!(cfg_docs) emmits unexpected_cfgs (rustdoc-args)
     // || cfg!(feature) or || cfg!(test) etc
     // default #[warn(unexpected_cfgs)]
-    std::env::var("OUT_DIR").expect("get env OUT_DIR")
+    std::env::var("OUT_DIR").unwrap() // .expect("get env OUT_DIR")
   }else{
     ".".to_string()
   }; // to keep lifetime

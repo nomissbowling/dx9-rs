@@ -87,6 +87,7 @@ typedef uint UINT;
 
 // fake
 typedef DWORD D3DPRIMITIVETYPE;
+typedef DWORD D3DLIGHTTYPE;
 struct D3DVERTEXELEMENT9; // unknown size 0
 // fake for Rust (no mangle) must include ex_c.h (must use quotes to include)
 #include "ex_c.h"
@@ -209,7 +210,9 @@ HRESULT drawChars(Cxd *xd, DWORD *c, DWORD *s,
   UINT t, int cw, int ch, int sw, int sh, float x, float y, float z,
   const wchar_t *w, UINT l); // texture cell w/h scale w/h
 HRESULT draw2DText(Cxd *xd, DWORD c, UINT f, int x, int y, const wchar_t *t);
-HRESULT setLight(Cxd *xd);
+HRESULT setLight(Cxd *xd, DWORD n, D3DLIGHTTYPE typ,
+  const float *dif, const float *spc, const float *amb,
+  const float *pos, const float *dir, float range);
 HRESULT setCamera(Cxd *xd, TransScreen *ptss);
 HRESULT drawD3D(Cxd *xd, TransScreen *ptss);
 HRESULT updateD3D(Cxd *xd);

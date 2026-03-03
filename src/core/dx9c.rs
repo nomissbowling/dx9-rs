@@ -7,6 +7,7 @@ use std::{result::Result, error::Error, ptr::null_mut};
 use windows::{
   core::*,
   Win32::Graphics::Gdi::*,
+  Win32::Graphics::{Direct3D9 as D3D9, Direct3D9::*},
   Win32::{Foundation::*}
 };
 
@@ -261,9 +262,11 @@ unsafe {
 
   /// draw_vt st: start, pc: primitive count
   pub fn draw_vt(&mut self, t: u32, v: u32, vtx: *mut Cvtx, sz: u32, fvf: u32,
-    ptype: D3DPRIMITIVETYPE, st: u32, pc: u32) -> HRESULT {
+    ptype: D3D9::D3DPRIMITIVETYPE, st: u32, pc: u32) -> HRESULT {
 unsafe {
-    HRESULT(drawVT(self.xd, t, v, vtx, sz, fvf, ptype, st, pc))
+    HRESULT(drawVT(self.xd, t, v, vtx, sz, fvf,
+      cast_any!(crate::core::D3DPRIMITIVETYPE, D3D9::D3DPRIMITIVETYPE, ptype),
+      st, pc))
 }
   }
 
@@ -286,9 +289,13 @@ unsafe {
   }
 
   /// set_light
-  pub fn set_light(&mut self) -> HRESULT {
+  pub fn set_light(&mut self, n: u32, typ: D3D9::D3DLIGHTTYPE,
+    dif: &[f32; 4], spc: &[f32; 4], amb: &[f32; 4],
+    pos: &[f32; 4], dir: &[f32; 4], range: f32) -> HRESULT {
 unsafe {
-    HRESULT(setLight(self.xd))
+    HRESULT(setLight(self.xd, n,
+      cast_any!(crate::core::D3DLIGHTTYPE, D3D9::D3DLIGHTTYPE, typ),
+      &dif[0], &spc[0], &amb[0], &pos[0], &dir[0], range))
 }
   }
 
@@ -330,6 +337,6 @@ pub fn test_dx9c() {
   assert_eq!(mem::size_of::<Cxd>(), 0); // unknown hidden
   assert_eq!(mem::size_of::<Cvtx>(), 28);
   assert_eq!(format!("{:08x}", unsafe { FVF_CVTX }), "000001c2");
-  assert_eq!(mem::size_of::<D3DVERTEXELEMENT9>(), 0); // unknown hidden (or 8)
+  assert_eq!(mem::size_of::<D3DVERTEXELEMENT9>(), 8);
   assert_eq!(mem::size_of::<timespec>(), 16);
 }

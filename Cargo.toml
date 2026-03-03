@@ -1,6 +1,6 @@
 [package]
 name = "dx9"
-version = "0.1.7" # change with html_root_url in lib.rs
+version = "0.1.8" # change with html_root_url in lib.rs
 edition = "2024"
 authors = ["nomissbowling <nomissbowling@yahoo.co.jp>"]
 
@@ -34,6 +34,7 @@ name = "dx9"
 #   "Win32_System_LibraryLoader",
 #   "Win32_Media",
 #   "Win32_Graphics_Gdi",
+#   "Win32_Graphics_Direct3D9",
 #   "Win32_UI_Input",
 #   "Win32_UI_Input_KeyboardAndMouse",
 #   "Win32_UI_WindowsAndMessaging"]
@@ -47,6 +48,7 @@ windows = {version = "=0.62.2", features = [
   "Win32_System_LibraryLoader",
   "Win32_Media",
   "Win32_Graphics_Gdi",
+  "Win32_Graphics_Direct3D9",
   "Win32_UI_Input",
   "Win32_UI_Input_KeyboardAndMouse",
   "Win32_UI_WindowsAndMessaging"]}

@@ -601,24 +601,25 @@ HRESULT draw2DText(Cxd *xd, DWORD c, UINT f, int x, int y, const wchar_t *t)
   return S_OK;
 }
 
-HRESULT setLight(Cxd *xd)
+HRESULT setLight(Cxd *xd, DWORD n, D3DLIGHTTYPE typ,
+  const float *dif, const float *spc, const float *amb,
+  const float *pos, const float *dir, float range)
 {
 #ifdef _DEBUG
   if(!xd) return E_FAIL;
   if(!xd->dev) return E_FAIL;
 #endif
-  DWORD n = 0;
-  xd->lc.dir = D3DXVECTOR3(1.0f, -1.0f, 1.0f); // (1.0f, -1.0f, -1.0f);
+  xd->lc.dir = D3DXVECTOR3(dir[0], dir[1], dir[2]);
   ZeroMemory(&xd->lc.light[n], sizeof(D3DLIGHT9));
-  xd->lc.light[n].Type = D3DLIGHT_DIRECTIONAL;
-  xd->lc.light[n].Diffuse.r = 1.0f;
-  xd->lc.light[n].Diffuse.g = 1.0f;
-  xd->lc.light[n].Diffuse.b = 1.0f;
-  xd->lc.light[n].Specular.r = 1.0f;
-  xd->lc.light[n].Specular.g = 1.0f;
-  xd->lc.light[n].Specular.b = 1.0f;
+  xd->lc.light[n].Type = typ;
+  xd->lc.light[n].Diffuse.r = dif[0];
+  xd->lc.light[n].Diffuse.g = dif[1];
+  xd->lc.light[n].Diffuse.b = dif[2];
+  xd->lc.light[n].Specular.r = spc[0];
+  xd->lc.light[n].Specular.g = spc[1];
+  xd->lc.light[n].Specular.b = spc[2];
   D3DXVec3Normalize((D3DXVECTOR3 *)&xd->lc.light[n].Direction, &xd->lc.dir);
-  xd->lc.light[n].Range = 200.0f;
+  xd->lc.light[n].Range = range;
   xd->dev->SetLight(n, &xd->lc.light[n]);
   xd->dev->LightEnable(n, TRUE);
   return S_OK;
@@ -671,7 +672,6 @@ HRESULT drawD3D(Cxd *xd, TransScreen *ptss)
     D3DCLEAR_TARGET | D3DCLEAR_ZBUFFER | D3DCLEAR_STENCIL,
     D3DCOLOR_ARGB(255, hex, hex, hex), 1.0f, 0);
   if(SUCCEEDED(xd->dev->BeginScene())){
-    setLight(xd);
     setCamera(xd, ptss);
 
     D3DXVECTOR3 axisZ = D3DXVECTOR3(0.0f, 0.0f, 1.0f);

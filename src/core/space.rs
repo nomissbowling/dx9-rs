@@ -3,6 +3,9 @@
 use crate::core::*;
 use crate::w32a::*;
 use std::{result::Result, error::Error};
+use windows::{
+  Win32::Graphics::Direct3D9::*
+};
 
 /// trait TSpace
 pub trait TSpace {
@@ -38,6 +41,13 @@ impl TSpace for Space {
   /// render
   fn render(&mut self, dx: &mut Dx9, t: &mut TransScreen) ->
     Result<(), Box<dyn Error>> {
+    let dif = [1.0f32, 1.0f32, 1.0f32, 1.0f32]; // r, g, b, _
+    let spc = [1.0f32, 1.0f32, 1.0f32, 1.0f32]; // r, g, b, _
+    let amb = [1.0f32, 1.0f32, 1.0f32, 1.0f32]; // r, g, b, _
+    let pos = [0.0f32, 0.0f32, 0.0f32, 0.0f32]; // x, y, z, _
+    let dir = [1.0f32, -1.0f32, 1.0f32, 1.0f32]; // [1.0, -1.0, -1.0, 1.0]
+    let _ = dx.set_light(0, D3DLIGHT_DIRECTIONAL,
+      &dif, &spc, &amb, &pos, &dir, 200.0f32);
     let _ = dx.draw_d3d(t);
     Ok(())
   }

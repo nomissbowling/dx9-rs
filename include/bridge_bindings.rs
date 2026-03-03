@@ -119,6 +119,7 @@ pub type HRESULT = ::std::os::raw::c_long;
 pub type DWORD = ulong;
 pub type UINT = uint;
 pub type D3DPRIMITIVETYPE = DWORD;
+pub type D3DLIGHTTYPE = DWORD;
 #[repr(C)]
 #[derive(Debug, Copy, Clone)]
 pub struct D3DVERTEXELEMENT9 {
@@ -391,7 +392,17 @@ unsafe extern "C" {
     ) -> HRESULT;
 }
 unsafe extern "C" {
-    pub fn setLight(xd: *mut Cxd) -> HRESULT;
+    pub fn setLight(
+        xd: *mut Cxd,
+        n: DWORD,
+        typ: D3DLIGHTTYPE,
+        dif: *const f32,
+        spc: *const f32,
+        amb: *const f32,
+        pos: *const f32,
+        dir: *const f32,
+        range: f32,
+    ) -> HRESULT;
 }
 unsafe extern "C" {
     pub fn setCamera(xd: *mut Cxd, ptss: *mut TransScreen) -> HRESULT;
